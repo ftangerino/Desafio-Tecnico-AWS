@@ -15,7 +15,7 @@ Implementação de uma integração simples de pedidos entre dois sistemas fict�
 
 1. Clone o repositório:
     ```bash
-    git clone https://github.com/ftangerino/Desafio-flashCRM
+    git clone https://github.com/ftangerino/Desafio-Tecnico-AWS
     cd Desafio-flashCRM
     ```
 
