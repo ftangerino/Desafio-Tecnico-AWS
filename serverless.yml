@@ -1,11 +1,11 @@
 # "org" ensures this Service is used with the correct Serverless Framework Access Key.
-org: tangerinoint
+org: mude-de-acordo-com-seu-config
 
 # "app" enables Serverless Framework Dashboard features and sharing them with other Services.
-app: try3-erp-crm
+app: mude-de-acordo-com-sua-config
 
 # "service" is the name of this project. This will also be added to your AWS resource names.
-service: try3-erp-crm
+service: mude-de-acordo-com-seu-config
 
 provider:
   name: aws
