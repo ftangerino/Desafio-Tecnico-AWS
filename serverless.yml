@@ -1,0 +1,42 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: tangerinoint
+
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: try3-erp-crm
+
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: try3-erp-crm
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:ListBucket
+        - s3:PutObject
+        - s3:GetObject
+      Resource: arn:aws:s3:::${self:service}-transformed-data-${self:provider.region}/*
+
+functions:
+  processErpData:
+    handler: handler.process_erp_data
+    environment:
+      BUCKET_NAME: ${self:service}-transformed-data-${self:provider.region}
+    events:
+      - http:
+          path: process-erp
+          method: post
+
+  storeTransformedData:
+    handler: handler.store_transformed_data
+    environment:
+      BUCKET_NAME: ${self:service}-transformed-data-${self:provider.region}
+    events:
+      - s3:
+          bucket: ${self:service}-transformed-data-${self:provider.region}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: order_
+            - suffix: .json
