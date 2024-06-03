@@ -31,9 +31,10 @@ Implementação de uma integração simples de pedidos entre dois sistemas fict�
 ## Deploy
 
 Para fazer o deploy da infraestrutura e das funções Lambda, execute:
-    ```bash
-    serverless deploy
-    ```
+
+```bash
+serverless deploy
+```
 Este comando irá empacotar e implantar o serviço na AWS. Ele criará as funções AWS Lambda necessárias, o API Gateway e o bucket S3.
 
 ## Uso
@@ -41,6 +42,14 @@ Este comando irá empacotar e implantar o serviço na AWS. Ele criará as funç�
 ### Acione a Função `processErpData`
 
 Envie uma solicitação POST para o endpoint criado pelo Serverless Framework. Use ferramentas como curl ou Postman para isso (Ou via FastAPI e Swagger).
+
+### Logging e Monitoramento
+
+Para visualizar os logs das funções Lambda, você pode optar pelo AWS CloudWatch Logs ou o comando Serverless:
+```bash
+serverless logs -f processErpData -t
+serverless logs -f storeTransformedData -t
+```
 
 ### Verifique os Dados no S3
 
