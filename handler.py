@@ -55,6 +55,18 @@ def calculate_discount(discount, value):
         discount_value = 0
     return discount_value
 
+def format_date(date_str):
+    """
+    Formata a data de dd/mm/yyyy para yyyy-mm-dd.
+
+    Args:
+        date_str (str): Data no formato dd/mm/yyyy.
+
+    Returns:
+        str: Data no formato yyyy-mm-dd.
+    """
+    return datetime.strptime(date_str, "%d/%m/%Y").strftime("%Y-%m-%d")
+
 def process_erp_data(event, context):
     """
     Processa os dados do ERP, transforma-os e os salva no S3.
@@ -70,7 +82,8 @@ def process_erp_data(event, context):
         HTTP Trigger: Configurado para ser acionado por uma solicitação HTTP POST no caminho /process.
     """
     bucket_name = os.environ['BUCKET_NAME']
-    s3_file_name = f"order_{datetime.now()}.json"
+    # s3_file_name = f"order_{datetime.now()}.json"
+    s3_file_name = f"order_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     s3_event_model = {
         "Records": {
             "s3": {
@@ -87,12 +100,23 @@ def process_erp_data(event, context):
         
         # Transforma os dados aplicando o desconto, atualizando o status e deixando formatado de acordo com as especificações do desafio.
         erp_orders = handle_status(erp_orders)
+        # for order in erp_orders:
+        #     discount = order.get('desconto', 0)
+        #     value = float(order['valor'])
+        #     freight = float(order['frete'])
+
+        #     discount_value = calculate_discount(discount, value)
+        #     order['desconto'] = discount_value
+        #     order['valor_final'] = round(value - discount_value + freight, 2)
 
         # Uso do operador morsa := para evitar a chamada de função repetida
         erp_orders = [
             {**order, 
+            'id': str(order['id']),
+            'data': format_date(order['data']),
             'desconto': (discount_value := calculate_discount(order.get('desconto', 0), float(order['valor']))), 
-            'valor_final': round(float(order['valor']) - discount_value + float(order['frete']), 2)}
+            'valor_final': round(float(order['valor']) - discount_value + float(order['frete']), 2),
+            'origem': 'erp'}
             for order in erp_orders
         ]
 
@@ -110,9 +134,21 @@ def process_erp_data(event, context):
 
         return {
             'statusCode': 200,
-            'body': json.dumps('Dados processados e salvos no S3 com sucesso')
+            'body': json.dumps({"mensagem": "Dados processados e salvos no S3 com sucesso"})
         }
 
+    # except FileNotFoundError:
+    #     logger.error("Arquivo erp_data.json não encontrado.")
+    #     return {
+    #         "statusCode": 500,
+    #         "body": json.dumps({"erro": "Arquivo erp_data.json não encontrado"})
+    #     }
+    # except json.JSONDecodeError:
+    #     logger.error("Erro ao decodificar JSON do arquivo erp_data.json.")
+    #     return {
+    #         "statusCode": 500,
+    #         "body": json.dumps({"erro": "Erro ao decodificar JSON do arquivo"})
+    #     }
     except Exception as e:
         logger.error(f"Erro ao processar os dados do ERP: {str(e)}")
         return {
