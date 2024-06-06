@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "description": "- Documentação do CRM para o desafio técnico",
-    "title": "FlashCRM | CRM Fictício",
+    "title": "CRM Fictício",
     "version": "v1",
     "contact": {}
   },
