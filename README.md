@@ -1,4 +1,4 @@
-# Desafio Técnico: Integração de um ERP-CRM
+# Integração entre dois sistemas: ERP-CRM
 
 ## Descrição
 
@@ -58,7 +58,3 @@ Verifique o bucket S3 especificado na variável de ambiente `BUCKET_NAME` (ela v
 ### Verifique a Atualização da Configuração do CRM
 
 Verifique ainda no bucket do S3 o arquivo `updated_crm_swagger.json` atualizado.
-
-## Considerações Finais
-
-Muito bacana o teste, bem fácil e prático vários detalhes como a arquitetura que o Serverless provém até ferramentas como `cfn-lint` ou próprio `serverless validate` para depurar falhas e validar se o arquivo `.yml` está dentro do padrão AWS. Optei por não implementar no código final o FastAPI ou o Swagger para visualização, porém possuo uma versão com o FastAPI implementado. Agradeço desde já pela oportunidade e aguardo algum feedback!
